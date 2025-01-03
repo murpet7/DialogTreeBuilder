@@ -1,7 +1,48 @@
-#[derive(Debug)]
-enum States{
+use crate::dialog_tree::{DialogTree, Node};
+
+#[derive(Default)]
+pub struct StateManager {
+    pub state: State,
+}
+
+impl StateManager {
+
+    pub fn check_state_transition(&mut self, tree: &mut DialogTree, state_transition: StateTransition, hovering_node: Option<usize>) {
+
+        match (&self.state, state_transition) {
+            (_, StateTransition::LeftMBHold) => {
+                match hovering_node {
+                    Some(node) => {
+                        self.state = State::Dragging(node)
+                    }
+                    None => { }
+                }
+            }
+            (_, StateTransition::NoButtonPress) => {
+                self.state = State::Idle;
+            }
+            (_, _) => { }
+        }
+    }
+}
+
+pub enum State{
     Idle,
-    Dragging(Node),
-    Linking(Node),
+    Dragging(usize),
+    Linking(usize),
     Editing,
 }
+
+impl Default for State {
+    fn default() -> Self {
+        State::Idle
+    }
+}
+
+pub enum StateTransition {
+    NoButtonPress,
+    LeftMBHold,
+    RightMBHold,
+    LeftMBSinglePress,
+}
+
