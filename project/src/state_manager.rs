@@ -10,6 +10,7 @@ impl StateManager {
     pub fn check_state_transition(&mut self, tree: &mut DialogTree, state_transition: StateTransition, hovering_node: Option<usize>) {
 
         match (&self.state, state_transition) {
+            (State::Dragging(_), StateTransition::LeftMBHold) => { }
             (_, StateTransition::LeftMBHold) => {
                 match hovering_node {
                     Some(node) => {
