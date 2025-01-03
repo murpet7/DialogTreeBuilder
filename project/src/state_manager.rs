@@ -1,5 +1,3 @@
-use crate::dialog_tree::{DialogTree, Node};
-
 #[derive(Default)]
 pub struct StateManager {
     pub state: State,
@@ -7,7 +5,7 @@ pub struct StateManager {
 
 impl StateManager {
 
-    pub fn check_state_transition(&mut self, tree: &mut DialogTree, state_transition: StateTransition, hovering_node: Option<usize>) {
+    pub fn check_state_transition(&mut self, state_transition: StateTransition, hovering_node: Option<usize>) {
 
         match (&self.state, state_transition) {
             (State::Dragging(_), StateTransition::LeftMBHold) => { }

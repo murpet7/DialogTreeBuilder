@@ -1,5 +1,5 @@
 use eframe::egui::{Ui, Color32, Stroke};
-use crate::dialog_tree::{DialogTree, Node};
+use crate::dialog_tree::DialogTree;
 use crate::input_manager::InputManager;
 use crate::state_manager::State;
 

@@ -1,6 +1,6 @@
 use eframe::egui::Context;
 use crate::state_manager::{StateManager, State, StateTransition};
-use crate::dialog_tree::{DialogTree, Node};
+use crate::dialog_tree::DialogTree;
 
 #[derive(Default)]
 pub struct InputManager {
@@ -26,7 +26,7 @@ impl InputManager {
             }
             _ => { }
         }
-        self.check_state_transition(tree, state_manager, &ctx);
+        self.check_state_transition(state_manager, &ctx);
         self.update_hovered_node(tree, ctx);
     }
 
@@ -42,9 +42,9 @@ impl InputManager {
         }
     }
 
-    fn check_state_transition(&mut self, tree: &mut DialogTree, state_manager: &mut StateManager, ctx: &Context) {
+    fn check_state_transition(&mut self, state_manager: &mut StateManager, ctx: &Context) {
         let state_transition = InputManager::get_state_transition(ctx);
-        state_manager.check_state_transition(tree, state_transition, self.hovering_node_id);
+        state_manager.check_state_transition(state_transition, self.hovering_node_id);
     }
 
     fn get_state_transition(ctx: &Context) -> StateTransition {
