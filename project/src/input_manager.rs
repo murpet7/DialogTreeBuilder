@@ -4,7 +4,7 @@ use crate::dialog_tree::DialogTree;
 
 #[derive(Default)]
 pub struct InputManager {
-    pub hovering_node_id: Option<usize>,
+    pub hovered_node_id: Option<usize>,
 }
 
 impl InputManager {
@@ -16,23 +16,23 @@ impl InputManager {
                 InputManager::check_add_node(tree, ctx);
             }
             State::Dragging(node_id) => {
-                let mut node = tree.get_node_from_id_mut(node_id);
-                match &mut node {
-                    Some(node) => {
-                        node.pos = ctx.pointer_hover_pos().unwrap();
+                let node = tree.get_node_from_id_mut(node_id);
+                match ctx.pointer_hover_pos() {
+                    Some(pointer_pos) => {
+                        node.pos = pointer_pos;
                     }
-                    None => eprintln!("Warning: Node ID of {} not found", node_id),
+                    None => { }
                 } 
             }
             _ => { }
         }
-        self.check_state_transition(state_manager, &ctx);
+        self.check_state_transition(tree, state_manager, &ctx);
         self.update_hovered_node(tree, ctx);
     }
 
     fn update_hovered_node(&mut self, tree: &mut DialogTree, ctx: &Context) {
         let hovering_node = tree.get_hovering_node(ctx.pointer_hover_pos());
-        self.hovering_node_id = hovering_node.map(|node| node.id);
+        self.hovered_node_id = hovering_node.map(|node| node.id);
     }
 
     fn check_add_node(tree: &mut DialogTree, ctx: &Context) {
@@ -42,9 +42,9 @@ impl InputManager {
         }
     }
 
-    fn check_state_transition(&mut self, state_manager: &mut StateManager, ctx: &Context) {
+    fn check_state_transition(&mut self, tree: &mut DialogTree, state_manager: &mut StateManager, ctx: &Context) {
         let state_transition = InputManager::get_state_transition(ctx);
-        state_manager.check_state_transition(state_transition, self.hovering_node_id);
+        state_manager.check_state_transition(tree, state_transition, self.hovered_node_id);
     }
 
     fn get_state_transition(ctx: &Context) -> StateTransition {
